@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">MyToDoList</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="content_description_floating_button">Add task</string>
+    <string name="enter_task">Введите задачу</string>
+    <string name="low">LOW</string>
+    <string name="medium">MEDIUM</string>
+    <string name="high">HIGH</string>
+    <string name="save">Сохранить</string>
+
+    <string name="error_message">Задача не может быть пустой</string>
+    <string name="success">Успешно</string>
 </resources>
