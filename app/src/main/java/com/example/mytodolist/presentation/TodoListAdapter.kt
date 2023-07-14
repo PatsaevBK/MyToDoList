@@ -5,22 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
 import com.example.mytodolist.domain.entities.Importance
 import com.example.mytodolist.domain.entities.TodoItem
 
-class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
+class TodoListAdapter :
+    androidx.recyclerview.widget.ListAdapter<TodoItem, TodoListViewHolder>(TodoItemDIffCallback()) {
 
-
-    var todoList: List<TodoItem> = listOf()
-        set(value) {
-            val callback = TodoItemListDIffCallback(field, value)
-            val diffResult = DiffUtil.calculateDiff(callback)
-            diffResult.dispatchUpdatesTo(this)
-            field = value
-        }
 
     var onClickListener: ((TodoItem) -> Unit)? = null
     var onLongClickListener: ((TodoItem) -> Unit)? = null
@@ -37,11 +28,11 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return todoList.size
+        return currentList.size
     }
 
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
-        val todoItem = todoList[position]
+        val todoItem = getItem(position)
         Log.d("adapter", "onBindViewHolder $todoItem")
         val color = when (todoItem.importance) {
             Importance.HIGH -> R.color.importance_high
@@ -73,4 +64,6 @@ class TodoListAdapter : RecyclerView.Adapter<TodoListViewHolder>() {
             layout.backgroundTintList = null
         }
     }
+
+
 }

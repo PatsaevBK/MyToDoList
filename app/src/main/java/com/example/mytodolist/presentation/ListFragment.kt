@@ -71,7 +71,7 @@ class ListFragment : Fragment() {
         setupOnSwipeListener()
         binding.recyclerView.adapter = adapter
         viewModel.todoList.observe(viewLifecycleOwner) {
-            adapter.todoList = it
+            adapter.submitList(it)
         }
     }
 
@@ -89,7 +89,7 @@ class ListFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val todoItem = adapter.todoList[viewHolder.adapterPosition]
+                val todoItem = adapter.currentList[viewHolder.adapterPosition]
                 viewModel.deleteTodoItem(todoItem)
             }
         }
