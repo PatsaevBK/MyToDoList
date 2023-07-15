@@ -9,8 +9,9 @@ import com.example.mytodolist.R
 import com.example.mytodolist.domain.entities.Importance
 import com.example.mytodolist.domain.entities.TodoItem
 
-class TodoListAdapter :
-    androidx.recyclerview.widget.ListAdapter<TodoItem, TodoListViewHolder>(TodoItemDIffCallback()) {
+class TodoListAdapter : androidx.recyclerview.widget.ListAdapter<TodoItem, TodoListViewHolder>(
+    TodoItemDIffCallback()
+) {
 
 
     var onClickListener: ((TodoItem) -> Unit)? = null

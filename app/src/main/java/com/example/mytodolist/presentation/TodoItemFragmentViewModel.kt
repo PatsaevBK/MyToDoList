@@ -1,8 +1,9 @@
 package com.example.mytodolist.presentation
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.mytodolist.data.RepositoryImpl
 import com.example.mytodolist.domain.entities.Importance
 import com.example.mytodolist.domain.entities.TodoItem
@@ -10,7 +11,9 @@ import com.example.mytodolist.domain.usecases.AddTodoItemUseCase
 import com.example.mytodolist.domain.usecases.EditTodoItemUseCase
 import com.example.mytodolist.domain.usecases.GetTodoItemUseCase
 
-class TodoItemFragmentViewModel : ViewModel() {
+class TodoItemFragmentViewModel(
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _errorInputTask = MutableLiveData<Boolean>()
     val errorInputTask: LiveData<Boolean>
@@ -24,7 +27,7 @@ class TodoItemFragmentViewModel : ViewModel() {
     val todoItem: LiveData<TodoItem>
         get() = _todoItem
 
-    private val repository = RepositoryImpl
+    private val repository = RepositoryImpl(application)
 
     private val addTodoItemUseCase = AddTodoItemUseCase(repository)
     private val editTodoItemUseCase = EditTodoItemUseCase(repository)
