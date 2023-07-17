@@ -10,10 +10,16 @@ import com.example.mytodolist.domain.entities.TodoItem
 import com.example.mytodolist.domain.usecases.AddTodoItemUseCase
 import com.example.mytodolist.domain.usecases.EditTodoItemUseCase
 import com.example.mytodolist.domain.usecases.GetTodoItemUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class TodoItemFragmentViewModel(
     application: Application
 ) : AndroidViewModel(application) {
+
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     private val _errorInputTask = MutableLiveData<Boolean>()
     val errorInputTask: LiveData<Boolean>
@@ -38,9 +44,11 @@ class TodoItemFragmentViewModel(
         val isValidInput = isValidInput(parseName, importance)
         if (isValidInput) {
             _todoItem.value?.let {
-                val todoItem = TodoItem(parseName, importance, id = it.id)
-                editTodoItemUseCase(todoItem)
-                _readyToClose.value = Unit
+                scope.launch {
+                    val todoItem = TodoItem(parseName, importance, id = it.id)
+                    editTodoItemUseCase(todoItem)
+                    finishWork()
+                }
             }
         } else {
             _errorInputTask.value = true
@@ -51,16 +59,21 @@ class TodoItemFragmentViewModel(
         val parseName = parseName(name)
         val isValidInput = isValidInput(parseName, importance)
         if (isValidInput) {
-            val todoItem = TodoItem(parseName, importance)
-            addTodoItemUseCase(todoItem)
-            _readyToClose.value = Unit
+            scope.launch {
+                val todoItem = TodoItem(parseName, importance)
+                addTodoItemUseCase(todoItem)
+                finishWork()
+            }
         } else {
             _errorInputTask.value = true
         }
     }
 
     fun getTodoItemWithId(id: Int) {
-        _todoItem.value = getTodoItemUseCase(id)
+        scope.launch {
+            val item = getTodoItemUseCase(id)
+            _todoItem.postValue(item)
+        }
     }
 
     fun resetErrorInputTask() {
@@ -80,5 +93,14 @@ class TodoItemFragmentViewModel(
             result = false
         }
         return result
+    }
+
+    private fun finishWork(){
+        _readyToClose.postValue(Unit)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
     }
 }

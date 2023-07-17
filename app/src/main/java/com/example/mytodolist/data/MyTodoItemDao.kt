@@ -1,7 +1,10 @@
 package com.example.mytodolist.data
 
 import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface MyTodoItemDao {
@@ -11,12 +14,12 @@ interface MyTodoItemDao {
     fun getTodoItemList(): LiveData<List<TodoItemDbModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addTodoItem(todoItem: TodoItemDbModel)
+    suspend fun addTodoItem(todoItem: TodoItemDbModel)
 
     @Query("DELETE FROM todo_items WHERE id= :id")
-    fun deleteTodoItem(id: Int)
+    suspend fun deleteTodoItem(id: Int)
 
     @Query("SELECT * FROM todo_items WHERE id = :id LIMIT 1")
-    fun getTodoItem(id: Int): TodoItemDbModel
+    suspend fun getTodoItem(id: Int): TodoItemDbModel
 
 }

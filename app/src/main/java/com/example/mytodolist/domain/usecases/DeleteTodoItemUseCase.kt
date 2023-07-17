@@ -5,7 +5,7 @@ import com.example.mytodolist.domain.repository.Repository
 
 class DeleteTodoItemUseCase(private val repository: Repository) {
 
-    operator fun invoke(todoItem: TodoItem) {
+    suspend operator fun invoke(todoItem: TodoItem) {
         repository.deleteTodoItem(todoItem)
     }
 }

@@ -7,6 +7,10 @@ import com.example.mytodolist.domain.entities.TodoItem
 import com.example.mytodolist.domain.usecases.DeleteTodoItemUseCase
 import com.example.mytodolist.domain.usecases.EditTodoItemUseCase
 import com.example.mytodolist.domain.usecases.GetTodoItemListUseCase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class ListFragmentViewModel(
     application: Application
@@ -18,12 +22,25 @@ class ListFragmentViewModel(
     private val deleteTodoItemUseCase = DeleteTodoItemUseCase(repository)
     private val editTodoItemUseCase = EditTodoItemUseCase(repository)
 
+    val scope = CoroutineScope(Dispatchers.IO)
+
     val todoList = getTodoItemListUseCase()
 
     fun changeEnableState(todoItem: TodoItem) {
-        val newItem = todoItem.copy(enabled = !todoItem.enabled)
-        editTodoItemUseCase(newItem)
+        scope.launch {
+            val newItem = todoItem.copy(enabled = !todoItem.enabled)
+            editTodoItemUseCase(newItem)
+        }
     }
 
-    fun deleteTodoItem(todoItem: TodoItem) = deleteTodoItemUseCase(todoItem)
+    fun deleteTodoItem(todoItem: TodoItem) {
+        scope.launch {
+            deleteTodoItemUseCase(todoItem)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
+    }
 }

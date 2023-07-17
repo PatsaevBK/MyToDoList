@@ -5,13 +5,13 @@ import com.example.mytodolist.domain.entities.TodoItem
 
 interface Repository {
 
-    fun addTodoItem(todoItem: TodoItem)
+    suspend fun addTodoItem(todoItem: TodoItem)
 
-    fun deleteTodoItem(todoItem: TodoItem)
+    suspend fun deleteTodoItem(todoItem: TodoItem)
 
-    fun getTodoItem(id: Int): TodoItem
+    suspend fun getTodoItem(id: Int): TodoItem
 
-    fun editTodoItem(todoItem: TodoItem)
+    suspend fun editTodoItem(todoItem: TodoItem)
 
     fun getTodoItemList(): LiveData<List<TodoItem>>
 

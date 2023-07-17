@@ -5,7 +5,7 @@ import com.example.mytodolist.domain.repository.Repository
 
 class GetTodoItemUseCase(private val repository: Repository) {
 
-    operator fun invoke(id: Int): TodoItem {
+    suspend operator fun invoke(id: Int): TodoItem {
         return repository.getTodoItem(id)
     }
 }

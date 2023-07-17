@@ -13,26 +13,26 @@ class RepositoryImpl(
     private val dao = AppDatabase.getInstance(application).myTodoItemDao()
     private val mapper = MyTodoItemMapper()
 
-    override fun addTodoItem(todoItem: TodoItem) {
+    override suspend fun addTodoItem(todoItem: TodoItem) {
         dao.addTodoItem(mapper.todoItemToEntity(todoItem))
     }
 
-    override fun deleteTodoItem(todoItem: TodoItem) {
+    override suspend fun deleteTodoItem(todoItem: TodoItem) {
         dao.deleteTodoItem(todoItem.id)
     }
 
-    override fun getTodoItem(id: Int): TodoItem {
+    override suspend fun getTodoItem(id: Int): TodoItem {
         return mapper.entityToTodoItem(dao.getTodoItem(id))
     }
 
-    override fun editTodoItem(todoItem: TodoItem) {
+    override suspend fun editTodoItem(todoItem: TodoItem) {
         dao.addTodoItem(mapper.todoItemToEntity(todoItem))
     }
 
     override fun getTodoItemList(): LiveData<List<TodoItem>> {
         return MediatorLiveData<List<TodoItem>>().apply {
             addSource(dao.getTodoItemList()) {
-                value = mapper.listDbModelToTodoItem(it)
+                postValue(mapper.listDbModelToTodoItem(it))
             }
         }
     }
